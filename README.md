@@ -55,7 +55,8 @@ VozUrbana es una aplicación web que permite a los ciudadanos reportar problemas
 
 ## 👨‍💻 Equipo de desarrollo
 
-- **Alex Mendoza**  
+- **Alex Mendoza**
+  - _Lider de Proyecto_  
   - _Documentación_  
   - _Desarrollo_
   - _QA_
