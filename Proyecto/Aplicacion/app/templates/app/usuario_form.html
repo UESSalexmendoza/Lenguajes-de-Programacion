@@ -1,0 +1,122 @@
+{% extends 'app/base.html' %} {% block content %}
+<section class="py-5">
+  <div class="container px-5">
+    <div class="bg-light rounded-3 py-5 px-4 px-md-5 mb-5">
+      <div class="row gx-5 justify-content-center">
+        <div class="col-lg-8 col-xl-6">
+          <div class="text-center mb-5">
+            <div class="feature bg-primary bg-gradient text-white rounded-3 mb-3">
+              <i class="bi bi-person-circle fs-1"></i>
+            </div>
+            <h4 class="fw-bold">Alta de Usuarios</h4>
+          </div>
+          <form method="post">
+              {% csrf_token %} 
+              <div class="row">
+                <div class="col-md-6 mb-3">
+                  <div class="form-floating mb-3">
+                    {{ form.username }}
+                    <label for="{{ form.username.id_for_label }}">Usuario</label>
+                    {% if form.username.errors %}
+                      <div class="text-danger small">{{ form.username.errors.0 }}</div>
+                    {% endif %}
+                  </div>
+                </div>
+                <div class="col-md-6 mb-3">
+                  <div class="form-floating mb-3">
+                    {{ form.name }}
+                    <label for="{{ form.name.id_for_label }}">Nombres</label>
+                    {% if form.name.errors %}
+                      <div class="text-danger">{{ form.name.errors }}</div>
+                    {% endif %}
+                  </div>
+                </div>
+              </div>
+              <div class="row">
+                <div class="col-md-6 mb-3">
+                  <div class="form-floating mb-3">
+                    {{ form.password1 }}
+                    <label for="{{ form.password1.id_for_label }}">Password</label>
+                    {% if form.password1.errors %}
+                      <div class="text-danger">{{ form.password1.errors }}</div>
+                    {% endif %}
+                  </div>
+                </div>
+                <div class="col-md-6 mb-3">
+                  <div class="form-floating mb-3">
+                    {{ form.password2 }}
+                    <label for="{{ form.password2.id_for_label }}">Confirmacion de Password</label>
+                    {% if form.password2.errors %}
+                      <div class="text-danger">{{ form.password2.errors }}</div>
+                    {% endif %}              
+                  </div>
+                </div>
+              </div>
+              <div class="form-floating mb-3">
+                {{ form.email }}
+                <label for="{{ form.email.id_for_label }}">Correo Electronico</label>
+                {% if form.email.errors %}
+                  <div class="text-danger">{{ form.email.errors }}</div>
+                {% endif %}  
+              </div>
+              <div class="row">
+                <div class="col-md-6 mb-3">
+                  <div class="form-floating mb-3">
+                    {{ form.telefono }}
+                    <label for="{{ form.telefono.id_for_label }}">Telefono</label>
+                    {% if form.telefono.errors %}
+                      <div class="text-danger">{{ form.telefono.errors }}</div>
+                    {% endif %}
+                  </div>
+                </div>
+                <div class="col-md-6 mb-3">
+                  <div class="form-floating mb-3">
+                    {{ form.fecha_nacimiento }}
+                    <label for="{{ form.fecha_nacimiento.id_for_label }}">Fecha de Nacimiento</label>
+                    {% if form.fecha_nacimiento.errors %}
+                      <div class="text-danger">{{ form.fecha_nacimiento.errors }}</div>
+                    {% endif %}  
+                  </div>
+                </div>
+              </div>
+              <div class="row">
+                <div class="col-md-6 mb-3">
+                  <div class="form-floating mb-3">
+                    {{ form.pais }}
+                    <label for="{{ form.pais.id_for_label }}">Pais</label>
+                    {% if form.pais.errors %}
+                      <div class="text-danger">{{ form.pais.errors }}</div>
+                    {% endif %}
+                  </div>
+                </div>
+                <div class="col-md-6 mb-3">
+                  <div class="form-floating mb-3">
+                    {{ form.ciudad }}
+                    <label for="{{ form.ciudad.id_for_label }}">Cuidad</label>
+                    {% if form.ciudad.errors %}
+                      <div class="text-danger">{{ form.ciudad.errors }}</div>
+                    {% endif %}
+                  </div>
+                </div>
+              </div>   
+              <div class="row">
+                <div class="col-md-6 mb-3">
+                  <div class="form-check d-flex align-items-center">
+                    {{ form.acepta_politicas }}
+                    <label class="form-check-label ms-2" for="{{ form.acepta_politicas.id_for_label }}">Aceptar Políticas</label>
+                  </div>
+                  {% if form.acepta_politicas.errors %}
+                    <div class="text-danger">{{ form.acepta_politicas.errors }}</div>
+                  {% endif %}
+                </div>
+              </div>
+                                    
+            <button type="submit" class="btn btn-primary">Registrar</button>
+          </form>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+{% endblock %}

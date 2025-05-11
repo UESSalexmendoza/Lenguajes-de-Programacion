@@ -1,0 +1,183 @@
+{% extends 'app/base.html' %}
+{% block full_width %}
+  {% block content %}
+    <div id="map" style="height: 100vh; width: 100vw;"></div>
+    <!-- Menú contextual -->
+    <div id="context-menu" style="display:none; position:absolute; z-index:1000; background:white; border:1px solid #ccc; padding:5px; border-radius:5px;">
+      <a href="#" id="seleccionarUbicacion">📍 Usar esta ubicación</a>
+    </div>
+
+    <!-- Modal Bootstrap -->
+    <div class="modal fade" id="ubicacionModal" tabindex="-1" aria-labelledby="ubicacionModalLabel" aria-hidden="true">
+        <div class="modal-dialog">
+          <div class="modal-content">
+            <form method="post" action="{% url 'crear_incidente' %}">
+              {% csrf_token %}
+              <div class="modal-header">
+                <h5 class="modal-title" id="ubicacionModalLabel">Reporte de Incidente</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Cerrar"></button>
+              </div>
+              <div class="modal-body">
+                <input type="hidden" name="latitud" id="latitud">
+                <input type="hidden" name="longitud" id="longitud">
+                <div class="mb-3">
+                    <label for="direccion" class="form-label">Dirección</label>
+                    <textarea name="direccion" id="direccion" class="form-control" rows="3" readonly></textarea>
+                </div>
+                <div class="mb-3">
+                  <label for="detalle" class="form-label">Detalle</label>
+                  <textarea name="detalle" id="detalle" class="form-control" rows="3" required></textarea>
+                </div>
+      
+                <div class="mb-3">
+                  <label for="entidad" class="form-label">Entidad Responsable</label>
+                  <select name="entidad_responsable" id="entidad" class="form-select" required>
+                    {% for entidad in entidades %}
+                      <option value="{{ entidad.id }}">{{ entidad.nombre }}</option>
+                    {% endfor %}
+                  </select>
+                </div>
+      
+                <div class="mb-3">
+                  <label for="pais" class="form-label">País</label>
+                  <select name="pais" id="pais" class="form-select" required>
+                    {% for pais in paises %}
+                      <option value="{{ pais.id }}" {% if user.pais == pais %}selected{% endif %}>{{ pais.nombre }}</option>
+                    {% endfor %}
+                  </select>
+                </div>
+      
+                <div class="mb-3">
+                  <label for="ciudad" class="form-label">Ciudad</label>
+                  <select name="ciudad" id="ciudad" class="form-select" required>
+                    {% for ciudad in ciudades %}
+                      <option value="{{ ciudad.id }}" {% if user.ciudad == ciudad %}selected{% endif %}>{{ ciudad.nombre }}</option>
+                    {% endfor %}
+                  </select>
+                </div>
+              </div>
+              <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cerrar</button>
+                <button type="submit" class="btn btn-primary">Reportar</button>
+              </div>
+            </form>
+          </div>
+        </div>
+      </div>
+      
+
+    <!-- Leaflet -->
+    <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css"/>
+    <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
+
+    <style>
+      html, body {
+        height: 100%;
+        margin: 0;
+      }
+      #map {
+        height: 100vh;
+        width: 100vw;
+        margin-top: 50px;
+      }
+      #context-menu {
+        box-shadow: 0 2px 6px rgba(0, 0, 0, 0.2);
+      }
+    </style>
+
+    <script>
+      let map;
+      let marcadorSeleccionado = null;
+      let clickCoords = null;
+      const userIsAuthenticated = {{ user.is_authenticated|yesno:"true,false" }};
+
+      document.addEventListener('DOMContentLoaded', function () {
+        map = L.map('map').setView([0, 0], 13);
+
+        L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
+          maxZoom: 19,
+          attribution: '&copy; OpenStreetMap contributors'
+        }).addTo(map);
+
+        // Geolocalización
+        if (navigator.geolocation) {
+          navigator.geolocation.getCurrentPosition(function (position) {
+            const lat = position.coords.latitude;
+            const lon = position.coords.longitude;
+            map.setView([lat, lon], 15);
+            L.marker([lat, lon]).addTo(map).bindPopup("Estás aquí").openPopup();
+          });
+        }
+
+        // Click derecho (context menu)
+        map.on('contextmenu', function (e) {
+          clickCoords = e.latlng;
+          const menu = document.getElementById('context-menu');
+          menu.style.left = e.originalEvent.pageX + 'px';
+          menu.style.top = e.originalEvent.pageY + 'px';
+          menu.style.display = 'block';
+        });
+
+        // Ocultar menú si se hace click normal
+        map.on('click', function () {
+          document.getElementById('context-menu').style.display = 'none';
+        });
+
+        // Acción al seleccionar ubicación
+        document.getElementById('seleccionarUbicacion').addEventListener('click', function (e) {
+          e.preventDefault();
+
+          if (!userIsAuthenticated) {
+            window.location.href = "{% url 'login' %}";
+            return;
+          }
+
+          if (clickCoords) {
+            const lat = clickCoords.lat;
+            const lng = clickCoords.lng;
+
+            if (marcadorSeleccionado) {
+              map.removeLayer(marcadorSeleccionado);
+            }
+
+            marcadorSeleccionado = L.marker([lat, lng]).addTo(map)
+              .bindPopup(`Lat: ${lat.toFixed(5)}<br>Lng: ${lng.toFixed(5)}`).openPopup();
+
+            document.getElementById('latitud').value = lat;
+            document.getElementById('longitud').value = lng;
+            //document.getElementById('modal-lat').innerText = lat.toFixed(5);
+            //document.getElementById('modal-lng').innerText = lng.toFixed(5);
+            fetch(`https://nominatim.openstreetmap.org/reverse?format=jsonv2&lat=${lat}&lon=${lng}`)
+            .then(response => response.json())
+            .then(data => {
+              const direccion = data.display_name || "Dirección no disponible";
+              document.getElementById('direccion').value = direccion;
+            })
+            .catch(() => {
+              document.getElementById('direccion').value = "No se pudo obtener la dirección.";
+            });
+            new bootstrap.Modal(document.getElementById('ubicacionModal')).show();
+          }
+
+          document.getElementById('context-menu').style.display = 'none';
+        });
+      });
+      fetch("{% url 'incidentes_json' %}")
+      .then(response => response.json())
+      .then(data => {
+        data.forEach(incidente => {
+          const marker = L.marker([incidente.lat, incidente.lng]).addTo(map);
+          const contenido = `
+            <strong>${incidente.estado}</strong> <i class="${incidente.icono}"></i><br>
+            <strong>Entidad:</strong> ${incidente.entidad}<br>
+            <strong>Reportado por:</strong> ${incidente.usuario}<br>
+            <strong>Fecha:</strong> ${incidente.fecha}<br>
+            <em>${incidente.detalle}</em>
+          `;
+          marker.bindPopup(contenido);
+        });
+      });
+    
+    </script>
+  {% endblock %}
+{% endblock %}

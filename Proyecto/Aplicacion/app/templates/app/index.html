@@ -1,0 +1,137 @@
+{% extends 'app/base.html' %}
+
+{% block title %}Inicio{% endblock %}
+
+{% block content %}
+<header class="py-5">
+    <div class="container px-5">
+        <div class="row justify-content-center">
+            <div class="col-lg-10">
+                <div class="text-center my-5">
+                    <h1 class="fw-bolder mb-3">¿Qué es VozUrbana?</h1>
+                    <p class="lead">
+                        <strong>VozUrbana</strong> es una plataforma digital colaborativa desarrollada por estudiantes de la Universidad de Especialidades Espíritu Santo (UEES), con el objetivo de promover la participación ciudadana en la identificación y reporte de problemáticas sociales y urbanas.
+                    </p>
+                    <p>
+                        Este proyecto surge como una iniciativa académica en la asignatura de <em>Lenguajes de Programación</em>, combinando tecnología, conciencia social y trabajo en equipo para construir una herramienta que permita visibilizar lo que sucede en nuestras comunidades.
+                    </p>
+                    <p>
+                        A través de un sistema de registro accesible y seguro, los usuarios pueden crear una cuenta, registrar incidentes en su ciudad —como fallos en servicios públicos, inseguridad, problemas ambientales, entre otros— y visualizar estos eventos en un mapa interactivo. Cada reporte se guarda en una base de datos para su análisis posterior y puede ser útil para autoridades locales, ONGs o ciudadanos activos.
+                    </p>
+                    <p>
+                        <strong>La misión de VozUrbana</strong> es fortalecer el vínculo entre las personas y su entorno, generando una cultura de reporte, solución y colaboración. Buscamos ser un canal que conecte la realidad local con oportunidades de mejora, fomentando el uso de herramientas digitales como medio para el cambio.
+                    </p>
+                    <p class="mb-4">
+                        Si ves algo que necesita atención, <strong>repórtalo</strong>. Tu voz es la primera acción hacia una ciudad más justa y habitable.
+                    </p>
+                    {% if not user.is_authenticated %}
+                        <div class="text-center">
+                            <a href="{% url 'login' %}" class="btn btn-primary btn-lg">Comienza a reportar</a>
+                        </div>
+                    {% endif %}              
+                </div>
+            </div>
+        </div>
+    </div>
+</header>
+<section id="como-funciona" class="py-5 bg-light">
+    <div class="container px-5 my-5">
+      <div class="text-center mb-5">
+        <h2 class="fw-bolder">¿Cómo funciona VozUrbana?</h2>
+        <p class="lead fw-normal text-muted">Una guía rápida para comenzar a transformar tu comunidad.</p>
+      </div>
+      <div class="row gx-5">
+        <div class="col-lg-4 text-center">
+          <div class="mb-3"><i class="bi bi-pencil-square fs-1 text-primary"></i></div>
+          <h5 class="fw-bolder">1. Reporta</h5>
+          <p class="text-muted">Regístrate e ingresa una descripción del incidente que observaste en tu comunidad.</p>
+        </div>
+        <div class="col-lg-4 text-center">
+          <div class="mb-3"><i class="bi bi-map fs-1 text-primary"></i></div>
+          <h5 class="fw-bolder">2. Visualiza</h5>
+          <p class="text-muted">Observa en el mapa los incidentes reportados por otros ciudadanos en Guayaquil.</p>
+        </div>
+        <div class="col-lg-4 text-center">
+          <div class="mb-3"><i class="bi bi-people fs-1 text-primary"></i></div>
+          <h5 class="fw-bolder">3. Participa</h5>
+          <p class="text-muted">Sé parte activa de una comunidad informada y colabora con las autoridades y vecinos.</p>
+        </div>
+      </div>
+    </div>
+</section>
+<section id="impacto-comunitario" class="py-5">
+    <div class="container px-5">
+      <div class="text-center mb-5">
+        <h2 class="fw-bolder">Impacto Comunitario</h2>
+        <p class="lead fw-normal text-muted">Lo que hemos logrado gracias a la participación ciudadana.</p>
+      </div>
+      <div class="row gx-5 text-center">
+        <div class="col-lg-3">
+          <h3 class="fw-bolder text-primary">+120</h3>
+          <p class="text-muted">Reportes de incidentes</p>
+        </div>
+        <div class="col-lg-3">
+          <h3 class="fw-bolder text-primary">45</h3>
+          <p class="text-muted">Zonas afectadas identificadas</p>
+        </div>
+        <div class="col-lg-3">
+          <h3 class="fw-bolder text-primary">80%</h3>
+          <p class="text-muted">Usuarios activos colaborando</p>
+        </div>
+        <div class="col-lg-3">
+          <h3 class="fw-bolder text-primary">+15</h3>
+          <p class="text-muted">Incidentes resueltos</p>
+        </div>
+      </div>
+    </div>
+</section>  
+<section id="guayaquil-habla" class="py-5 bg-light" id="scroll-target">
+    <div class="container px-5 my-5">
+        <div class="row gx-5 align-items-center">
+            <div class="col-lg-6"><img class="img-fluid rounded mb-5 mb-lg-0" src="https://www.civitatis.com/f/ecuador/guayaquil/paseo-catamaran-atardecer-rio-guayas-589x392.jpg" alt="..." /></div>
+            <div class="col-lg-6">
+                <h2 class="fw-bolder">Guayaquil habla: el origen de VozUrbana</h2>
+                <p class="lead fw-normal text-muted mb-0">Guayaquil, corazón económico del Ecuador y una de las ciudades más pobladas del país, enfrenta desafíos urbanos complejos como la inseguridad, la falta de mantenimiento en espacios públicos y problemas de movilidad. En este contexto nace VozUrbana, un proyecto concebido como una herramienta ciudadana para visibilizar y canalizar denuncias e incidentes que afectan la calidad de vida en los barrios de Guayaquil. Inspirado en la resiliencia y el compromiso de sus habitantes, este proyecto busca fortalecer la participación ciudadana, fomentar la transparencia institucional y contribuir a la construcción de una ciudad más segura, ordenada y equitativa.</p>
+            </div>
+        </div>
+    </div>
+</section>
+
+<section id="nuestro-equipo" class="py-5" style="margin-bottom: 60px;">
+    <div class="container px-5 my-5">
+        <div class="text-center">
+            <h2 class="fw-bolder">Nuestro Equipo</h2>
+            <p class="lead fw-normal text-muted mb-5">Somos un grupo de estudiantes comprometidos con el desarrollo de soluciones tecnológicas para el bien común. Desde Guayaquil, trabajamos colaborativamente para crear una plataforma que fortalezca la participación ciudadana, fomente la transparencia y permita visibilizar los problemas reales de nuestra comunidad.</p>
+        </div>
+        <div class="row gx-5 row-cols-1 row-cols-sm-2 row-cols-xl-4 justify-content-center">
+            <div class="col mb-5 mb-5 mb-xl-0">
+                <a href="https://www.linkedin.com/in/alexmendozamorante/" target="_blank" rel="noopener noreferrer" style="text-decoration: none; color: inherit;">
+                    <div class="text-center">
+                        <img class="img-fluid rounded-circle mb-4 px-4" src="https://media.licdn.com/dms/image/v2/C4E03AQFpSAybVMHEpQ/profile-displayphoto-shrink_800_800/profile-displayphoto-shrink_800_800/0/1663097049722?e=1752105600&v=beta&t=U_lFFi6VqE17_c4oo0uO6To1ZC7SuEUhxRgnXOUszZc" alt="..." style="min-width: 120px; max-width: 160px; height: auto;" />
+                        <h5 class="fw-bolder">Alex Mendoza</h5>
+                        <div class="fst-italic text-muted">Lider de Proyectos</div>
+                    </div>
+                </a>              
+            </div>
+            <div class="col mb-5 mb-5 mb-xl-0">
+                <a href="https://www.linkedin.com/in/carlosteven-plua-bustamante-118114337/" target="_blank" rel="noopener noreferrer" style="text-decoration: none; color: inherit;">
+                    <div class="text-center">
+                        <img class="img-fluid rounded-circle mb-4 px-4" src="https://media.licdn.com/dms/image/v2/D5635AQHEFvOSNlfhmw/profile-framedphoto-shrink_800_800/B56ZaYoWB2HgAg-/0/1746317435319?e=1746925200&v=beta&t=w3gp-H35j4y3JOOWjghMSIu60-E_RwfV0GeOUrakUTI" alt="..." style="min-width: 120px; max-width: 160px; height: auto;" />
+                        <h5 class="fw-bolder">Carlos Plua</h5>
+                        <div class="fst-italic text-muted">Arquitecto de Soluciones</div>
+                    </div>
+                </a>              
+            </div>
+            <div class="col mb-5 mb-5 mb-sm-0">
+                <a href="https://www.linkedin.com/in/victor-david-tello-bravo-b71697214/" target="_blank" rel="noopener noreferrer" style="text-decoration: none; color: inherit;">
+                    <div class="text-center">
+                        <img class="img-fluid rounded-circle mb-4 px-4" src="https://media.licdn.com/dms/image/v2/C4D03AQEye7lMleMNKg/profile-displayphoto-shrink_800_800/profile-displayphoto-shrink_800_800/0/1623319140627?e=1752105600&v=beta&t=JmPBHqyxYs4ezuhnwA5psdgeawljBcigbNkkR_gOiPI" alt="..." style="min-width: 120px; max-width: 160px; height: auto;" />
+                        <h5 class="fw-bolder">David Tello</h5>
+                        <div class="fst-italic text-muted">Scrum Master</div>
+                    </div>
+                </a>              
+        </div>
+        </div>
+    </div>
+</section>
+{% endblock %}

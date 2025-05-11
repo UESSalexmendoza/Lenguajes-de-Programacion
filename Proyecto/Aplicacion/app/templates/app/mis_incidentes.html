@@ -1,0 +1,88 @@
+{% extends 'app/base.html' %}
+{% block content %}
+
+<h2 class="mt-4 mb-3">Mis Reportes de Incidentes</h2>
+
+<div class="table-responsive">
+  <table class="table table-hover table-bordered align-middle bg-white">
+    <thead class="table-dark">
+      <tr>
+        <th>Historial</th>
+        <th># Caso</th>
+        <th>Ciudad</th>
+        <th>País</th>
+        <th>Entidad</th>
+        <th>Dirección</th>
+        <th>Incidente</th>
+        <th>Estado</th>
+      </tr>
+    </thead>
+    <tbody>
+      {% for incidente in incidentes %}
+      <tr>
+        <td class="text-center">
+            <a href="#" data-bs-toggle="modal" data-bs-target="#historialModal{{ incidente.numero_caso }}">
+              <i class="bi bi-clock-history fs-5" title="Ver historial"></i>
+            </a>
+          </td>        
+        <td>{{ incidente.numero_caso|stringformat:"06d" }}</td>
+        <td>{{ incidente.ciudad.nombre }}</td>
+        <td>{{ incidente.pais.nombre }}</td>
+        <td>{% if incidente.entidad_responsable %}{{ incidente.entidad_responsable.nombre }}{% else %}No asignada{% endif %}</td>
+        <td>{{ incidente.direccion }}</td>
+        <td>{{ incidente.detalle|safe }}</td>
+        <td class="text-center">
+          <i class="{{ incidente.estado.icono }}" title="{{ incidente.estado.nombre }}"></i>
+        </td>
+      </tr>
+      {% empty %}
+      <tr>
+        <td colspan="7" class="text-center text-muted">No has registrado incidentes aún.</td>
+      </tr>
+      {% endfor %}
+    </tbody>
+  </table>
+  {% for incidente in incidentes %}
+  <div class="modal fade" id="historialModal{{ incidente.numero_caso }}" tabindex="-1" aria-labelledby="historialLabel{{ incidente.numero_caso }}" aria-hidden="true">
+    <div class="modal-dialog modal-lg modal-dialog-scrollable">
+      <div class="modal-content">
+        <div class="modal-header">
+          <h5 class="modal-title">Historial del Caso #{{ incidente.numero_caso|stringformat:"06d" }}</h5>
+          <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Cerrar"></button>
+        </div>
+        <div class="modal-body">
+          {% if incidente.historial_estados.all %}
+            <ul class="list-group list-group-flush">
+              {% for cambio in incidente.historial_estados.all %}
+                <li class="list-group-item">
+                  <div class="d-flex justify-content-between">
+                    <div>
+                      <i class="{{ cambio.estado.icono }}" title="{{ cambio.estado.nombre }}"></i>
+                      <strong class="ms-2">{{ cambio.estado.nombre }}</strong>
+                      <br>
+                      <small class="text-muted">
+                        {% if cambio.usuario %}{{ cambio.usuario.name }}{% else %}Sistema{% endif %} - {{ cambio.fecha_cambio|date:"d/m/Y H:i" }}
+                      </small>
+                      {% if cambio.comentario %}
+                        <p class="mt-1 mb-0"><em>{{ cambio.comentario }}</em></p>
+                      {% endif %}
+                    </div>
+                  </div>
+                </li>
+              {% endfor %}
+            </ul>
+          {% else %}
+            <p class="text-muted">No hay historial disponible para este incidente.</p>
+          {% endif %}
+        </div>
+        <div class="modal-footer">
+          <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cerrar</button>
+        </div>
+      </div>
+    </div>
+  </div>
+  {% endfor %}
+  
+</div>
+
+{% endblock %}
