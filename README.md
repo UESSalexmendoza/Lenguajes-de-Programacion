@@ -43,7 +43,7 @@ VozUrbana es una aplicación web que permite a los ciudadanos reportar problemas
    ```bash
    pip install -r requirements.txt
    ```
-5. Configurar conexi贸n a base de datos en `settings.py`
+5. Configurar conexion a base de datos en `settings.py`
 6. Ejecutar migraciones y correr el servidor:
    ```bash
    python manage.py makemigrations
